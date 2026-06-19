@@ -17,6 +17,11 @@ app.include_router(products.router)
 app.include_router(alerts.router)
 
 
+@app.get("/")
+def root():
+    return {"status": "ok", "service": "Price Monitor API"}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
