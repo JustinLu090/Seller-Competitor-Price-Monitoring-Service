@@ -169,6 +169,24 @@ def register():
     return render_template("register.html", error=error)
 
 
+@app.route("/guest-login")
+def guest_login():
+    guest_email = "guest@demo.com"
+    guest_password = "guest-demo-2026"
+    resp = api("post", "/auth/login", data={
+        "username": guest_email,
+        "password": guest_password,
+    })
+    if not resp.ok:
+        resp = api("post", "/auth/register", json={
+            "email": guest_email,
+            "password": guest_password,
+        })
+    if resp.ok:
+        session["token"] = resp.json()["access_token"]
+    return redirect(url_for("index"))
+
+
 @app.route("/logout")
 def logout():
     session.clear()
