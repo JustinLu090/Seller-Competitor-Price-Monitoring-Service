@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name[:30] if product else '商品' }} — 價格走勢{% endblock %}
+{% block content %}
+
+<div class="mb-3">
+  <a href="/" class="text-decoration-none text-muted">← 返回清單</a>
+</div>
+
+{% if product %}
+<h5 class="mb-1">{{ product.name }}</h5>
+<p class="text-muted small mb-4">
+  蝦皮商品 ID：{{ product.shopee_item_id }} ｜
+  降幅門檻：{{ product.alert_threshold_pct }}% ｜
+  我的定價：{% if product.my_price %}NT${{ "%.0f"|format(product.my_price) }}{% else %}未設定{% endif %}
+</p>
+{% endif %}
+
+<div class="card shadow-sm">
+  <div class="card-header">競品價格走勢（近 {{ history|length }} 筆）</div>
+  <div class="card-body">
+    {% if history %}
+    <canvas id="priceChart" height="100"></canvas>
+    {% else %}
+    <p class="text-muted text-center py-4">尚無歷史資料，等待下一次爬蟲執行（每 30 分鐘一次）</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if history %}
+<script>
+const labels = {{ history | map(attribute='scraped_at') | map('tw_time') | list | tojson }};
+const prices = {{ history | map(attribute='price') | list | tojson }};
+const myPrice = {{ product.my_price | default('null') }};
+
+const ctx = document.getElementById('priceChart').getContext('2d');
+const datasets = [{
+  label: '競品價格',
+  data: prices,
+  borderColor: '#dc3545',
+  backgroundColor: 'rgba(220,53,69,0.08)',
+  tension: 0.3,
+  fill: true,
+  pointRadius: prices.length < 50 ? 4 : 1,
+}];
+
+if (myPrice !== null) {
+  datasets.push({
+    label: '我的定價',
+    data: new Array(labels.length).fill(myPrice),
+    borderColor: '#0d6efd',
+    borderDash: [6, 3],
+    borderWidth: 2,
+    pointRadius: 0,
+    fill: false,
+  });
+}
+
+new Chart(ctx, {
+  type: 'line',
+  data: { labels, datasets },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => `NT$${ctx.parsed.y.toFixed(0)}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          maxTicksLimit: 10,
+          callback: function(val, idx) {
+            return new Date(this.getLabelForValue(val)).toLocaleDateString('zh-TW');
+          }
+        }
+      },
+      y: {
+        ticks: { callback: v => `NT$${v}` }
+      }
+    }
+  }
+});
+</script>
+{% endif %}
+
+{% endblock %}

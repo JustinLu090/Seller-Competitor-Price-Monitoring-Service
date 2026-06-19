@@ -1,0 +1,4 @@
+requests==2.31.0
+pytrends==4.9.2
+pandas==2.2.2
+matplotlib==3.9.0

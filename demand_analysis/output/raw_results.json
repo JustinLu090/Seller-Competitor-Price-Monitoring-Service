@@ -1,0 +1,157 @@
+{
+  "ptt": {
+    "total_articles": 58,
+    "demand_signal_articles": 40,
+    "by_board": {
+      "e-shopping": 58
+    },
+    "notable_titles": [
+      "[問題] 蝦皮賣家為了五星要給我免費",
+      "[問題] 蝦皮賣家未如期出貨，要怎麼保留訂單？",
+      "[閒聊] 賣日雜附錄包的蝦皮賣家",
+      "[問題] 蝦皮賣家缺貨硬出同筆訂單的其他商品",
+      "[抱怨] 蝦皮賣家惡意不退貨",
+      "[問題] 蝦皮賣家大陸出貨的問題",
+      "[抱怨] 蝦皮賣家退貨爭議",
+      "[閒聊] 東京著衣創辦人喊話蝦皮賣家搬家到雅虎",
+      "[問題] 請問蝦皮賣家出貨的另約時間",
+      "[閒聊] 被蝦皮賣家給封鎖了"
+    ],
+    "csv_path": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/ptt_results.csv"
+  },
+  "google_trends": {
+    "news_count": 163,
+    "news_csv": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/google_news.csv",
+    "news_sample": [
+      "沒商品也能當賣家？蝦皮素人網紅分潤月賺9萬 MIT能反攻淘寶貨？ - 天下雜誌",
+      "引爆網購物流割喉戰 i郵箱祭38元破盤價 電商蝦皮賣家樂歪 - news.cnyes.com",
+      "蝦皮賣家欠稅280萬遭管收！親友急捧現金救人 他竟拒絕：關一個月可省50萬 - 知新聞",
+      "蝦皮賣家上榜！消費爭議不友善黑名單曝光 一場演唱會讓Klook和這公司都入列 | 李瑋萱 | 新聞 - Storm.mg",
+      "蝦皮免運新制爆爭議！賣家批沒賺到錢反被「割韭菜」　官方解釋了 - 三立新聞網SETN.com",
+      "出售小物成功一看訂單「倒賠14元」！小賣家傻眼怒轟蝦皮- 生活 - 自由時報",
+      "蝦皮賣家「喪禮毛巾盒」當包裝 買家當場秒退怒批觸霉頭 - Yahoo新聞",
+      "蝦皮新制備貨限縮、補貼綁定，賣家喊苦釀出走潮，專家提供4點自救之道 - TNL The News Lens 關鍵評論網",
+      "賣50元竟倒貼平台14元慘變負債　小賣家喊苦：新年第一筆欠蝦皮錢 - ETtoday新聞雲",
+      "蝦皮新制遭批「割韭菜」！賣家沒賺錢還倒貼 官方今回應了 - 壹蘋新聞網"
+    ]
+  },
+  "appstore": {
+    "app_id": 959841107,
+    "total_reviews": 50,
+    "demand_matched": 6,
+    "demand_rate_pct": 12.0,
+    "rating_distribution": {
+      "1": 36,
+      "5": 5,
+      "4": 3,
+      "2": 4,
+      "3": 2
+    },
+    "all_csv": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/appstore_all_reviews.csv",
+    "matched_csv": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/appstore_demand_reviews.csv",
+    "competitor_pricing": [
+      {
+        "tool": "Prisync",
+        "url": "https://prisync.com/pricing/",
+        "currency": "USD",
+        "min_price": 9.0,
+        "all_prices_found": [
+          9.0
+        ],
+        "snippet": "",
+        "usd_to_twd": 32,
+        "min_price_twd": 288
+      },
+      {
+        "tool": "Price2Spy",
+        "url": "https://www.price2spy.com/en/pricing/",
+        "currency": "USD",
+        "min_price": null,
+        "all_prices_found": [],
+        "snippet": "",
+        "usd_to_twd": 32,
+        "min_price_twd": null
+      }
+    ],
+    "competitor_csv": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/competitor_pricing.csv"
+  },
+  "market": {
+    "app_data": [
+      {
+        "app_id": 959841107,
+        "name": "蝦皮購物 | 花得更少買得更好",
+        "rating": 4.69944,
+        "rating_count": 780163,
+        "rating_count_current": 780163,
+        "version": "3.76.34",
+        "genre": "Shopping",
+        "role": "buyer"
+      },
+      {
+        "app_id": 6749287561,
+        "name": "蝦皮賣家中心",
+        "rating": 1.58,
+        "rating_count": 50,
+        "rating_count_current": 50,
+        "version": "3.61.89",
+        "genre": "Business",
+        "role": "seller"
+      }
+    ],
+    "news_data": [
+      {
+        "query": "蝦皮賣家 利潤",
+        "label": "賣家利潤相關",
+        "article_count": 35,
+        "sample_titles": [
+          "台灣電商慘，蝦皮靠店到店突圍？他示警恐有「致命打擊」：賣家利潤越來越薄 | 李瑋萱 | 新聞 - Storm.mg",
+          "討論牆 | 蝦皮盲盒「銷售龍頭」宣布倒閉 達人嘆：未來只會看到越來越多 - LINE TODAY",
+          "蝦皮盲盒龍頭宣告倒閉！五年經營「百萬賣家」也撐不住 達人揭殘酷真相 - 三立新聞網SETN.com",
+          "蝦皮新規傷賣家及電商業 業者促政府嚴防管制 - 大纪元",
+          "無法可管！ 賣家控電商「抽成20%」 盼立專法 - TVBS新聞網"
+        ]
+      },
+      {
+        "query": "蝦皮賣家 降價",
+        "label": "降價競爭相關",
+        "article_count": 43,
+        "sample_titles": [
+          "蝦皮購物2026年推「全站大免運」 店取滿199、宅配滿490免運費 - UDN",
+          "蝦皮推「全站大免運」！店取滿199、宅配滿490就OK，背後看中什麼效益？ | 數位時代 - LINE TODAY",
+          "蝦皮賣家遭抽超高手續費「收益變負數」！釣出一大票苦主：怎麼不去搶 - Yahoo新聞",
+          "折抵蝦幣遭「取消訂單」！買家錯愕：是在哈囉 客服吐「賣家收益變化」真相 | 陳姿諭 | 全解析 - Storm.mg",
+          "用蝦幣折抵200元 賣家拒出貨「折抵金額太多」！他翻白眼 - ETtoday新聞雲"
+        ]
+      },
+      {
+        "query": "電商 賣家工具 台灣",
+        "label": "賣家工具需求",
+        "article_count": 42,
+        "sample_titles": [
+          "從專業設計到零門檻AI 商品圖生成 耀鏡AI推動電商工具平民化 - 商傳媒",
+          "直球「現今 AI 應用痛點」！ VeloFlow.ai 攜手電商平台與品牌打造億元銷售額 - PChome Online 新聞",
+          "亞馬遜全球開店讓AI與跨境電商成台灣出口新動能　去年以來二位數成長 - ETtoday財經雲",
+          "AI × 出海新策略！亞馬遜跨境電商高峰會重磅登場，為台灣企業量身打造「出海突圍」新戰略！ - 數位時代",
+          "亞馬遜全球開店以AI賦能跨境電商！台灣賣家出口海外業績飆 - NOWnews今日新聞"
+        ]
+      },
+      {
+        "query": "shopee taiwan seller",
+        "label": "英文媒體報導",
+        "article_count": 5,
+        "sample_titles": [
+          "蝦皮「3億營收賣家GG」？一則被公告消息背後，凸顯賣家正在打「沒贏面的仗」 - 數位時代",
+          "免費時代終結！蝦皮 4/17 起向賣家收取成交及信用卡手續費 - inside.com.tw",
+          "【消費GOGO】台灣特色新桌遊 寄生之廟 - 玩咖Playing",
+          "【觀點】蝦皮「億萬等級」賣家熄燈！曾經1天秒殺1貨櫃泡麵，為何快速殞落？ - 數位時代",
+          "[教學]蝦皮貨到付款設定懶人包@7-11 ibon 交貨便超商取貨/銀行請款流程攻略 - funtop.tw"
+        ]
+      }
+    ],
+    "total_buyer_ratings": 780163,
+    "total_news_coverage": 125,
+    "app_csv": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/appstore_market_stats.csv",
+    "news_csv": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/google_news_market.csv",
+    "chart_path": "/Users/justinlu/Desktop/NTU/BDA/BDS_final/demand_analysis/output/market_overview_chart.png"
+  }
+}

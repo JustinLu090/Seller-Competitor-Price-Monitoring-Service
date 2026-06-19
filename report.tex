@@ -1,0 +1,571 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------------------
+% Encoding & Fonts  (XeLaTeX)
+% ---------------------------------------------------------------------------
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setCJKmainfont{PingFang TC}
+\setmainfont{Times New Roman}
+
+% ---------------------------------------------------------------------------
+% Layout
+% ---------------------------------------------------------------------------
+\usepackage[top=2.2cm,bottom=2.2cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\setstretch{1.2}
+\setlength{\parskip}{4pt}
+
+% ---------------------------------------------------------------------------
+% Section titles
+% ---------------------------------------------------------------------------
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\definecolor{ntublue}{RGB}{26,26,94}
+\definecolor{lightblue}{RGB}{235,238,250}
+\definecolor{lightgreen}{RGB}{241,248,241}
+\definecolor{lightorange}{RGB}{255,245,236}
+\definecolor{colegray}{RGB}{240,240,248}
+\definecolor{warnorange}{RGB}{196,92,0}
+\definecolor{successgreen}{RGB}{46,125,50}
+
+\titleformat{\section}
+  {\large\bfseries\color{ntublue}}{\thesection.}{0.6em}{}
+  [\color{ntublue}\titlerule]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{ntublue}}{\thesubsection}{0.5em}{}
+\titlespacing{\section}{0pt}{12pt}{4pt}
+\titlespacing{\subsection}{0pt}{8pt}{3pt}
+
+% ---------------------------------------------------------------------------
+% Headers & Footers
+% ---------------------------------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\textcolor{ntublue}{Yahoo Shopping Seller Price Monitor}}
+\fancyhead[R]{\small\textcolor{ntublue}{BDS Final Project --- Spring 2026, NTU}}
+\fancyfoot[C]{\small\thepage}
+
+% ---------------------------------------------------------------------------
+% Tables
+% ---------------------------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+% ---------------------------------------------------------------------------
+% Callout boxes
+% ---------------------------------------------------------------------------
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{insightbox}{
+  breakable,colback=lightblue,colframe=ntublue,
+  leftrule=4pt,toprule=0pt,bottomrule=0pt,rightrule=0pt,
+  arc=0pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+}
+\newtcolorbox{successbox}{
+  breakable,colback=lightgreen,colframe=successgreen,
+  leftrule=4pt,toprule=0pt,bottomrule=0pt,rightrule=0pt,
+  arc=0pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+}
+\newtcolorbox{warnbox}{
+  breakable,colback=lightorange,colframe=warnorange,
+  leftrule=4pt,toprule=0pt,bottomrule=0pt,rightrule=0pt,
+  arc=0pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+}
+
+% ---------------------------------------------------------------------------
+% Code blocks
+% ---------------------------------------------------------------------------
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{colegray},
+  frame=single,framerule=0.4pt,rulecolor=\color{gray!50},
+  breaklines=true,keepspaces=true,
+  showspaces=false,showstringspaces=false,
+}
+
+% ---------------------------------------------------------------------------
+% Misc
+% ---------------------------------------------------------------------------
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.4em,itemsep=1pt,parsep=0pt,topsep=2pt}
+\setlist[enumerate]{leftmargin=1.4em,itemsep=1pt,parsep=0pt,topsep=2pt}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,linkcolor=ntublue,urlcolor=ntublue,
+  pdftitle={Yahoo Shopping Seller Competitor Price Monitoring Service},
+}
+\usepackage{graphicx}
+
+% ===========================================================================
+\begin{document}
+% ===========================================================================
+
+% ---------------------------------------------------------------------------
+% Cover Page
+% ---------------------------------------------------------------------------
+\thispagestyle{empty}
+\begin{center}
+  \vspace*{2.5cm}
+  {\LARGE\bfseries\color{ntublue}
+    Seller Competitor Price Monitoring Service}\\[0.5em]
+  {\large Built on Yahoo Shopping Taiwan}\\[0.3em]
+  {\normalsize Designing a System That Monetizes Data}\\[1.5em]
+  \rule{0.55\textwidth}{0.8pt}\\[1.2em]
+  {\normalsize Big Data Systems (BDS) --- Final Project \quad|\quad
+   Spring 2026 \quad|\quad National Taiwan University}\\[2.5cm]
+
+  \begin{tabular}{rl}
+    \textbf{Student ID:} & \texttt{<your-student-id>} \\[0.3em]
+    \textbf{GitHub:}     & \url{https://github.com/<your-id>/bds-price-monitor} \\[0.3em]
+    \textbf{Live Demo:}  & \url{https://bds-price-monitor.railway.app} \\[0.3em]
+    \textbf{Date:}       & June 2026 \\
+  \end{tabular}
+\end{center}
+\newpage
+
+% ===========================================================================
+\section{Target Customer}
+% ===========================================================================
+
+\subsection{Segment and Persona}
+
+Our customers are \textbf{small-to-mid-sized sellers on Taiwan e-commerce platforms}
+--- sole proprietors or micro-businesses selling 50--500 SKUs (electronics
+accessories, fashion, household goods) with monthly GMV of NT\$50K--500K and
+net margins of 10--15\%. We focus on sellers who list products on
+\textbf{Yahoo Shopping Taiwan} (\texttt{tw.buy.yahoo.com}), one of Taiwan's
+largest e-commerce marketplaces.
+
+\textbf{Representative persona --- Wang Wei, Yahoo Shopping seller since 2020:}
+he sells approximately 200 electronics-accessory listings at NT\$150K GMV/month.
+His core pain point is discovering that a competitor slashed prices only
+\emph{after} his own sales drop and his platform ranking has already fallen.
+His current workaround is manual morning checks of competitor listings,
+which means he misses all off-hours flash sales and has no access to price history.
+
+\subsection{Why Our System Wins}
+
+\begin{table}[H]
+\centering\small\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{X X}
+\toprule
+\textbf{Status Quo} & \textbf{Our System} \\
+\midrule
+Manual checks 1--2$\times$/day; misses off-hours
+  & Automated 30-minute scrape cycle, 24/7 \\
+No price-history data
+  & 30-day trend chart per competitor product \\
+No proactive alerts
+  & Email alert within minutes of threshold breach \\
+Seller must manually find competitor links
+  & Automatic competitor discovery from product name \\
+English-only global tools (Prisync, Price2Spy)
+  & Built for Yahoo Shopping TW; NT\$ pricing \\
+Prisync entry: \$9\,USD/mo ($\approx$NT\$288)
+  & NT\$149/mo --- roughly half the cost of Prisync, locally optimised \\
+\bottomrule
+\end{tabularx}
+\caption{Status quo vs.\ our system}
+\end{table}
+
+\textbf{Addressable market:} Yahoo Shopping Taiwan hosts tens of thousands of
+active third-party sellers. Targeting the tool-buying top 10\% at NT\$149/month
+yields a \textbf{NT\$7M+/year beachhead} market with clear expansion paths
+to Momo and PChome.
+
+% ===========================================================================
+\section{Evidence of Demand and Willingness to Pay}
+% ===========================================================================
+
+We gathered evidence from \textbf{four independent public data sources}
+using Python scripts in \texttt{demand\_analysis/} (run
+\texttt{python run\_all.py} to reproduce all figures).
+
+\begin{table}[H]
+\centering\small\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{L{3.2cm} L{3.4cm} C{1.6cm} X}
+\toprule
+\textbf{Source} & \textbf{Method} & \textbf{Result} & \textbf{Signal} \\
+\midrule
+PTT BBS (e-shopping, BuyTogether)
+  & PTT search API; regex parse
+  & 58 threads (40 = 69\% with demand signal)
+  & Sellers complain about rising fees, margin erosion, and competitor dumping \\
+Google News RSS (zh-TW)
+  & RSS feed; headline de-duplication
+  & 163 unique articles
+  & Mainstream press repeatedly covers ``seller profits squeezed'' \\
+App Store reviews (iTunes RSS)
+  & Keyword match on latest 50 reviews
+  & 6 / 50 = 12\% hit rate
+  & Shopee Seller Center app rated \textbf{1.6\,$\bigstar$} vs.\ 4.7 for buyer app --- severe unmet seller needs \\
+iTunes Lookup API
+  & REST JSON; rating count
+  & 780,163 buyer ratings; 50 seller ratings
+  & Large buyer base confirms market scale; tiny seller-app engagement confirms tooling gap \\
+\bottomrule
+\end{tabularx}
+\caption{Demand evidence: four independent public data sources}
+\end{table}
+
+\begin{insightbox}
+The 15,600$\times$ gap in App Store ratings between buyer apps (780K ratings)
+and seller management tools (50 ratings) reflects chronic under-investment in
+seller tooling across Taiwan e-commerce, creating a clear opening for a focused
+third-party monitoring service.
+\end{insightbox}
+
+\subsection{Competitor Pricing Benchmark and Willingness to Pay}
+
+\begin{table}[H]
+\centering\small\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{L{2.6cm} L{3cm} C{2.4cm} C{2cm} C{2cm}}
+\toprule
+\textbf{Tool} & \textbf{Focus} & \textbf{Entry Price} & \textbf{Language} & \textbf{Yahoo TW?} \\
+\midrule
+Prisync   & General e-commerce & \$9\,USD/mo ($\approx$NT\$288)  & English & No \\
+Price2Spy & General e-commerce & \$19\,USD/mo ($\approx$NT\$608) & English & No \\
+Yahoo built-in analytics & Yahoo only & Free & Chinese & Partial \\
+\textbf{Our System} & \textbf{Yahoo Shopping TW} & \textbf{NT\$149/mo} & \textbf{English + Chinese} & \textbf{Yes} \\
+\bottomrule
+\end{tabularx}
+\caption{Competitor pricing benchmark}
+\end{table}
+
+\begin{successbox}
+\textbf{WTP conclusion:} Existing tools start at NT\$288--608/month but require
+English proficiency and lack Taiwan-specific platform integration. Our NT\$149/month
+entry is roughly half the price of the cheapest English competitor (Prisync at
+NT\$288) while delivering automatic competitor discovery out of the box.
+Sellers' demonstrated willingness to pay for platform ads and third-party ERP
+tools (NT\$500--2,000/month) confirms this segment will pay for margin-protecting
+tools even at higher price points.
+\end{successbox}
+
+\subsection{Pricing Rationale}
+
+We set the entry price at \textbf{NT\$149/month} based on three considerations:
+
+\begin{enumerate}
+  \item \textbf{Accessibility for small sellers.}
+        Our smallest target seller generates NT\$50K GMV/month at a 10\% margin,
+        yielding roughly NT\$5,000/month in gross profit.
+        NT\$149 represents less than \textbf{3\% of that margin},
+        making the subscription an easy expense to justify without managerial
+        approval --- comparable to a single platform ad campaign.
+
+  \item \textbf{Undercut the cheapest international alternative.}
+        Prisync, the lowest-priced global competitor, costs \$9\,USD/month
+        ($\approx$NT\$288). Pricing at NT\$149 --- just over half --- gives
+        price-sensitive Taiwan sellers a compelling reason to choose a
+        locally focused tool even before evaluating features.
+        Price2Spy at NT\$608 makes our price look even more attractive.
+
+  \item \textbf{Infrastructure sustainability.}
+        At NT\$149/month, the system covers its full cloud infrastructure cost
+        (Railway + Upstash, $\approx$NT\$800/month) at just 6 subscribers,
+        and breaks even on one developer's salary at roughly 410 users ---
+        approximately 10\% of the addressable beachhead.
+        This is a realistic early-adoption target achievable through community
+        word-of-mouth without paid advertising.
+\end{enumerate}
+
+% ===========================================================================
+\newpage
+\section{System Design}
+% ===========================================================================
+
+\subsection{Platform Selection: From Shopee to Yahoo Shopping}
+
+Our initial prototype targeted \textbf{Shopee Taiwan}, which has a large seller
+base and public product listings. During implementation, however, we discovered
+that Shopee's v4 API applies a multi-layer anti-bot defence that makes
+programmatic access infeasible:
+
+\begin{warnbox}
+\textbf{Shopee Anti-Bot Barrier.}
+Even with a valid logged-in session cookie, all API calls to
+\texttt{shopee.tw/api/v4/item/get} return error code \texttt{90309999}
+(\texttt{action\_type: 2}). The server demands dynamically generated
+\texttt{x-sap-access-*} authentication headers that are computed
+by obfuscated JavaScript running inside the Shopee web application.
+These tokens change per request and cannot be replicated without executing
+a full browser environment (e.g.\ Selenium or Playwright),
+which is 10--100$\times$ more resource-intensive and brittle at the
+scale of a 30-minute polling cycle across many products.
+\end{warnbox}
+
+We therefore pivoted to \textbf{Yahoo Shopping Taiwan}
+(\texttt{tw.buy.yahoo.com}), which imposes no equivalent barrier:
+
+\begin{itemize}
+  \item A simple HTTP \texttt{GET} to
+        \texttt{https://tw.buy.yahoo.com/gdsale/gdsale.asp?gdid=\{GDID\}}
+        returns a full HTML page with the product price embedded as a JSON
+        literal (e.g.\ \texttt{"price": 440}).
+  \item No authentication, no dynamic token, and no JavaScript execution
+        are required. Standard browser \texttt{User-Agent} and
+        \texttt{Referer} headers are sufficient.
+  \item The search endpoint
+        \texttt{https://tw.buy.yahoo.com/search/product?p=\{keyword\}}
+        returns an HTML page containing \texttt{gdid} values for matching
+        products, enabling automatic competitor discovery.
+  \item Behaviour verified on 20+ real products across electronics, fashion,
+        and home goods categories.
+\end{itemize}
+
+\subsection{Architecture}
+
+\begin{figure}[H]
+\begin{lstlisting}[language={}]
+Yahoo Shopping Taiwan  (tw.buy.yahoo.com)
+      |  Plain HTTP GET -- no auth, no token required
+      |  (requests spider + APScheduler, every 30 min)
+      v
+[Kafka]  topic: price_events          (confluentinc/cp-kafka:7.6.1)
+      |
+      v
+[Spark Streaming]  PySpark 3.5.1 -- foreachBatch:
+   1. Read latest_price:{product_id} from Redis cache
+   2. Compute price-change %
+   3. If competitor price < seller my_price by >= alert threshold
+         -> write Alert record to PostgreSQL
+         -> send Gmail SMTP alert email to seller
+   4. Update Redis  (TTL 3600 s)
+   5. Append row to price_history in PostgreSQL
+      |
+      +---------------------+
+      v                     v
+[PostgreSQL 15]         [Redis 7]
+ users                   latest_price:{product_id}
+ products
+   (parent + competitors,
+    self-referential FK)
+ price_history
+ alerts
+      |
+      v
+[FastAPI :8000]  <-->  [Flask Dashboard :5001]
+ JWT auth REST API        Chart.js 30-day price-history charts
+ Yahoo spider (on-demand) Competitor price comparison table
+ Auto competitor discovery Email alert history log
+\end{lstlisting}
+\caption{End-to-end system architecture (8 Docker Compose services)}
+\end{figure}
+
+\subsection{Automatic Competitor Discovery}
+
+A key differentiator of our system is \textbf{zero-configuration competitor
+discovery}. When a seller adds their product URL, the system automatically
+builds a competitor watchlist without any additional user input:
+
+\begin{enumerate}
+  \item \textbf{Keyword extraction.} The product name is tokenised and cleaned:
+        English brand tokens (e.g.\ ``Esense'', ``Anker'') and any immediately
+        following Chinese brand names are skipped; material/spec descriptors
+        (e.g.\ aluminum alloy, silicone) are filtered out; remaining
+        product-type acronyms (USB, HUB, HDMI, SSD, \ldots) and Chinese
+        category words are combined into a 2--4 token search query.
+        Example: ``Esense S649 A+C Aluminum USB3.2 HUB Hub'' $\to$ \texttt{USB HUB Hub}.
+  \item \textbf{Yahoo search.} The keyword is submitted to the Yahoo Shopping
+        search endpoint and up to 5 distinct \texttt{gdid} product IDs are
+        extracted from the results page via regex.
+  \item \textbf{Competitor fetch.} Each candidate \texttt{gdid} is fetched
+        individually; product name and current price are extracted from the
+        embedded HTML JSON.
+  \item \textbf{Database insertion.} Each competitor is saved with
+        \texttt{competitor\_of = parent\_id}, creating a self-referential
+        relationship inside the \texttt{products} table.
+        A PostgreSQL \texttt{SAVEPOINT} is used per competitor so that a
+        single failure does not roll back the others.
+  \item \textbf{Fallback re-discovery.} If a parent product has zero active
+        competitors (e.g.\ due to a transient network timeout during the
+        original add), triggering ``Scrape All Now'' automatically re-runs
+        competitor discovery before the regular price-scrape cycle.
+\end{enumerate}
+
+\begin{successbox}
+\textbf{Result in testing:} Adding a USB hub product at NT\$440 automatically
+populated 5 competitors --- YUCUN (NT\$588), Esense alternate model (NT\$297),
+ANTIAN (NT\$760 and NT\$1,080), and INTOPIC (NT\$425) --- within approximately
+45 seconds. The NT\$297 competitor immediately triggered an email alert
+(32.5\% cheaper than the seller's listed price).
+\end{successbox}
+
+\subsection{Technology Choices}
+
+\begin{table}[H]
+\centering\small\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{L{2.8cm} L{2.8cm} X}
+\toprule
+\textbf{Technology} & \textbf{Role} & \textbf{Justification} \\
+\midrule
+Apache Kafka (Confluent 7.6) & Message queue
+  & Decouples scraper from processor; provides durable replay; supports
+    future consumers such as ML anomaly detection or multi-user fan-out \\
+Spark Streaming (PySpark 3.5) & Micro-batch processor
+  & \texttt{foreachBatch} enables flexible Python logic for per-product
+    threshold comparison; scales to thousands of concurrent products \\
+PostgreSQL 15 & Persistent store
+  & ACID guarantees; self-referential FK for parent/competitor products;
+    composite index on \texttt{(product\_id, scraped\_at DESC)} for fast
+    time-series queries \\
+Redis 7 & Latest-price cache
+  & O(1) lookup avoids a PostgreSQL round-trip on every Spark micro-batch;
+    TTL = 3600\,s prevents stale cached values \\
+Python \texttt{requests} + regex & Yahoo scraper
+  & Lightweight HTTP scraping; Yahoo pages require no JavaScript execution;
+    price extracted from embedded JSON with a single regex pattern \\
+FastAPI + Flask & API + Dashboard
+  & JWT-authenticated REST backend; on-demand scrape endpoints; Chart.js
+    30-day price-history charts; Gmail SMTP alert emails \\
+\bottomrule
+\end{tabularx}
+\caption{Technology choices and justifications}
+\end{table}
+
+\subsection{Data Schema}
+
+The database contains four tables (see \texttt{init-db/schema.sql}):
+
+\begin{itemize}
+  \item \textbf{users}: \texttt{id, email, password\_hash, plan, created\_at}
+  \item \textbf{products}: \texttt{id, user\_id, name, yahoo\_gdid, my\_price,
+        alert\_threshold\_pct, active, competitor\_of, created\_at}\\
+        The \texttt{competitor\_of} column is a \emph{self-referential} foreign
+        key (\texttt{products.id $\to$ products.id ON DELETE CASCADE}).
+        Parent products (added by the seller) have \texttt{competitor\_of = NULL};
+        auto-discovered competitors have \texttt{competitor\_of = parent\_id}.
+        A \texttt{UNIQUE(user\_id, yahoo\_gdid)} constraint prevents duplicate
+        tracking of the same product by the same user.
+  \item \textbf{price\_history}: \texttt{id, product\_id, price, stock,
+        sold\_count, scraped\_at} with a composite index on
+        \texttt{(product\_id, scraped\_at DESC)}
+  \item \textbf{alerts}: \texttt{id, product\_id, old\_price, new\_price,
+        change\_pct, email\_sent, created\_at}
+\end{itemize}
+
+\begin{lstlisting}[language=SQL, caption={Key products table definition}]
+CREATE TABLE products (
+    id                  SERIAL PRIMARY KEY,
+    user_id             INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    name                VARCHAR(500) NOT NULL,
+    yahoo_gdid          BIGINT NOT NULL,
+    my_price            NUMERIC(10,2),
+    alert_threshold_pct NUMERIC(5,2) DEFAULT 5.0,
+    active              BOOLEAN DEFAULT TRUE,
+    competitor_of       INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    created_at          TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id, yahoo_gdid)
+);
+\end{lstlisting}
+
+\subsection{Scalability}
+
+\begin{table}[H]
+\centering\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{C{1.6cm} C{2.2cm} L{3.2cm} X}
+\toprule
+\textbf{Scale} & \textbf{Products} & \textbf{Bottleneck} & \textbf{Solution} \\
+\midrule
+MVP    & $\sim$100   & Single Kafka broker   & Docker Compose on one machine \\
+10$\times$  & $\sim$1,000  & PostgreSQL write throughput & PgBouncer connection pool; monthly table partitioning \\
+100$\times$ & $\sim$10,000 & Scraper concurrency vs.\ rate limits & Async \texttt{httpx}; per-domain request throttle \\
+\bottomrule
+\end{tabularx}
+\caption{Scalability at different growth stages}
+\end{table}
+
+\subsection{Deployment}
+
+Full system: \textbf{Docker Compose} (8 services ---
+\texttt{zookeeper}, \texttt{kafka}, \texttt{postgresql}, \texttt{redis},
+\texttt{scraper}, \texttt{pipeline}, \texttt{api}, \texttt{dashboard}),
+launched with a single \texttt{docker-compose up --build}. For cloud
+deployment, stateless services run on \textbf{Railway} (with managed
+PostgreSQL and Redis plugins), and the local Kafka broker is replaced by
+\textbf{Upstash} managed Kafka.
+
+% ===========================================================================
+\section{Bonus --- Go-to-Market Difficulties}
+% ===========================================================================
+
+\textbf{1.\ Why Not Shopee?}
+
+\begin{warnbox}
+We originally built the scraper targeting Shopee Taiwan and encountered an
+insurmountable technical barrier: Shopee's v4 API requires dynamically generated
+\texttt{x-sap-access-*} authentication tokens computed by obfuscated in-browser
+JavaScript. These tokens change per request and cannot be obtained without running
+a full headless browser. Even with a valid logged-in session cookie, all requests
+return error \texttt{90309999}. Running Selenium or Playwright at scale is
+10--100$\times$ more resource-intensive and brittle, making it impractical for a
+30-minute polling service. Yahoo Shopping Taiwan imposes no equivalent barrier,
+making it the viable platform for an MVP built with standard Python \texttt{requests}.
+\end{warnbox}
+
+\textbf{2.\ Legal Risk.}
+Yahoo Shopping Taiwan's Terms of Service restrict systematic automated access
+for commercial purposes. Our system scrapes publicly visible product pages at a
+polite rate (30-minute intervals with 1.5-second inter-request delays),
+consistent with how a human would browse. Mitigations include:
+(a) pursuing a Yahoo partner API arrangement once the business scales;
+(b) aggressive caching to minimise request volume;
+(c) transparent disclosure of the scraping mechanism to users.
+
+\textbf{3.\ Trust and Adoption.}
+Our system only requires a competitor's product URL --- not store credentials ---
+minimising perceived privacy risk. The primary go-to-market channel is Taiwan
+seller Facebook communities and forums, where peer recommendations carry outsized
+influence.
+
+\textbf{4.\ Cold-Start.}
+There is no network-effect dependency: a seller with a single product URL receives
+immediate value. The automatic competitor-discovery feature (Section~3.3) means
+sellers do not need to manually find competitor links; the system generates a
+fully populated watchlist from the very first product added.
+
+\textbf{5.\ Competitive Landscape.}
+
+\begin{table}[H]
+\centering\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{L{3.8cm} C{2.2cm} X}
+\toprule
+\textbf{Competitor} & \textbf{Threat} & \textbf{Our Moat} \\
+\midrule
+Yahoo built-in analytics & High & Shows only own sales data, not competitor prices or history \\
+Prisync / Price2Spy      & Low  & No Yahoo TW URL parser; English-only; no auto-discovery \\
+Developer copy           & Medium & First-mover brand in seller community; data network effect \\
+\bottomrule
+\end{tabularx}
+\caption{Competitive landscape}
+\end{table}
+
+Long-term moat: \emph{data network effects} --- aggregated anonymised pricing
+trends across thousands of sellers become a premium product
+(e.g.\ ``average price movement in your category this week'').
+
+\textbf{6.\ Unit Economics.}
+Revenue: NT\$149/user/month.
+Infrastructure (Railway + Upstash Kafka) for 100 users: approximately NT\$800/month.
+Break-even on infrastructure: \textbf{6 users}.
+Cost to sustain one developer (NT\$60K/month): \textbf{$\approx$410 users} ($\approx$10\% of beachhead).
+At 20\% penetration ($\approx$NT\$1.2M/month) the system sustains a small team
+and funds multi-platform expansion to Momo and PChome.
+
+\end{document}

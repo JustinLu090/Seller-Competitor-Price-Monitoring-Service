@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}警報記錄{% endblock %}
+{% block content %}
+
+<h4 class="mb-4">降價警報記錄</h4>
+
+{% if alerts %}
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>時間</th>
+          <th>商品</th>
+          <th>原價</th>
+          <th>新價</th>
+          <th>降幅</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in alerts %}
+        <tr>
+          <td class="text-muted small">{{ a.created_at | tw_time }}</td>
+          <td>{{ a.product_name[:40] }}{% if a.product_name|length > 40 %}…{% endif %}</td>
+          <td>NT${{ "%.0f"|format(a.old_price) }}</td>
+          <td class="price-drop">NT${{ "%.0f"|format(a.new_price) }}</td>
+          <td class="price-drop">▼ {{ "%.1f"|format(a.change_pct) }}%</td>
+          <td>
+            {% if a.email_sent %}
+              <span class="badge bg-success">已發送</span>
+            {% else %}
+              <span class="badge bg-secondary">未發送</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <p>目前沒有警報記錄</p>
+  <p>當競品價格下降超過設定門檻時，這裡會出現記錄並發送 Email</p>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}競品監控{% endblock %}
+{% block content %}
+
+<div class="row mb-4 align-items-center">
+  <div class="col">
+    <h4>競品價格監控</h4>
+    <p class="text-muted mb-0">新增您販售的商品，系統自動搜尋同類競品並追蹤價格</p>
+  </div>
+  <div class="col-auto d-flex gap-2">
+    <form method="POST" action="/scrape-all">
+      <button class="btn btn-secondary">全部立即抓取</button>
+    </form>
+    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addModal">
+      + 新增我的商品
+    </button>
+  </div>
+</div>
+
+{% if products %}
+  {% for p in products %}
+  <div class="card shadow-sm mb-4">
+    <!-- 我的商品標題 -->
+    <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
+      <div>
+        <span class="badge bg-primary me-2">我的商品</span>
+        <a href="/product/{{ p.id }}" class="text-white text-decoration-none fw-semibold">
+          {{ p.name[:50] }}{% if p.name|length > 50 %}…{% endif %}
+        </a>
+        <span class="text-secondary small ms-2">Yahoo #{{ p.yahoo_gdid }}</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        {% if p.my_price %}
+          <span class="fw-bold">我的定價：NT${{ "%.0f"|format(p.my_price) }}</span>
+        {% endif %}
+        <form method="POST" action="/remove/{{ p.id }}"
+              onsubmit="return confirm('移除此商品及所有競品監控？')">
+          <button class="btn btn-sm btn-outline-light">移除</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      {% if p.competitors %}
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>競品名稱</th>
+            <th>競品現價</th>
+            <th>與我的差距</th>
+            <th>資料筆數</th>
+            <th>最後抓取</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in p.competitors %}
+          <tr>
+            <td>
+              <a href="/product/{{ c.id }}" class="text-decoration-none">
+                {{ c.name[:45] }}{% if c.name|length > 45 %}…{% endif %}
+              </a>
+              <div class="text-muted small">
+                <a href="https://tw.buy.yahoo.com/gdsale/gdsale.asp?gdid={{ c.yahoo_gdid }}"
+                   target="_blank" class="text-muted">Yahoo #{{ c.yahoo_gdid }}</a>
+              </div>
+            </td>
+            <td>
+              {% if c.latest_price %}
+                <strong>NT${{ "%.0f"|format(c.latest_price) }}</strong>
+              {% else %}
+                <span class="text-muted">尚未抓取</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if p.my_price and c.latest_price %}
+                {% set diff = ((c.latest_price - p.my_price) / p.my_price * 100) %}
+                {% if diff < 0 %}
+                  <span class="price-drop fw-semibold">▼ {{ "%.1f"|format(diff|abs) }}%（競品較低）</span>
+                {% elif diff > 0 %}
+                  <span class="price-up fw-semibold">▲ {{ "%.1f"|format(diff) }}%（我較低）</span>
+                {% else %}
+                  <span class="text-secondary">持平</span>
+                {% endif %}
+              {% else %}—{% endif %}
+            </td>
+            <td>
+              {% if c.history_count > 0 %}
+                <span class="badge bg-success">{{ c.history_count }} 筆</span>
+              {% else %}
+                <span class="badge bg-secondary">0 筆</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if c.last_scraped %}
+                <small class="text-success">{{ c.last_scraped | tw_time }}</small>
+              {% else %}
+                <span class="badge bg-secondary">尚未抓取</span>
+              {% endif %}
+            </td>
+            <td>
+              <form method="POST" action="/scrape/{{ c.id }}">
+                <button class="btn btn-sm btn-success">抓取</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- 競品摘要：最低競品價 vs 我的定價 -->
+      {% if p.my_price %}
+        {% set comp_prices = p.competitors | selectattr("latest_price") | map(attribute="latest_price") | list %}
+        {% if comp_prices %}
+          {% set min_comp = comp_prices | min %}
+          <div class="px-3 py-2 border-top bg-light d-flex align-items-center gap-3">
+            <small class="text-muted">競品最低價：</small>
+            <strong class="{% if min_comp < p.my_price %}text-danger{% else %}text-success{% endif %}">
+              NT${{ "%.0f"|format(min_comp) }}
+            </strong>
+            <small class="text-muted">我的定價：NT${{ "%.0f"|format(p.my_price) }}</small>
+            {% if min_comp < p.my_price %}
+              {% set gap = ((p.my_price - min_comp) / p.my_price * 100) %}
+              <span class="badge bg-danger">最低競品比您便宜 {{ "%.1f"|format(gap) }}%</span>
+            {% else %}
+              <span class="badge bg-success">您的定價目前最有競爭力</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% else %}
+      <div class="text-center py-4 text-muted">
+        <p class="mb-1">尚未找到競品，點擊「全部立即抓取」重新搜尋</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+
+{% else %}
+<div class="text-center py-5 text-muted">
+  <p class="fs-5">還沒有監控中的商品</p>
+  <p>點擊「新增我的商品」，貼上 Yahoo 購物中心商品連結</p>
+  <p class="small">系統將自動搜尋並監控同類競品</p>
+</div>
+{% endif %}
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">新增我的商品</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="POST" action="/add">
+        <div class="modal-body">
+          <div class="alert alert-info small mb-3">
+            貼上您在 Yahoo 購物上販售（或想參考）的商品連結，系統會自動找出 3–5 個同類競品並開始監控。
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Yahoo 購物商品網址 <span class="text-danger">*</span></label>
+            <input type="url" name="yahoo_url" class="form-control" required
+                   placeholder="https://tw.buy.yahoo.com/gdsale/gdsale.asp?gdid=12010572">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">我的定價（NT$）</label>
+            <input type="number" name="my_price" class="form-control" step="1" min="0"
+                   placeholder="設定後可顯示與競品的差距">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">降幅警報門檻（%）</label>
+            <input type="number" name="threshold" class="form-control"
+                   value="5" step="0.5" min="1" max="50">
+            <div class="form-text">競品比您便宜超過此比例時寄送 Email 警報</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-dark">開始監控（自動搜尋競品）</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
